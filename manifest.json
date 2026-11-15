@@ -1,0 +1,8 @@
+{
+  "name": "Royal Salon Shop Book",
+  "short_name": "Royal Salon",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#d4af37"
+}
