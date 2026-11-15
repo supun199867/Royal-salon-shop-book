@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Royal Salon Shop Book</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: white;
+}
+header {
+    background: #b8860b;
+    color: white;
+    text-align: center;
+    padding: 25px 10px;
+}
+header h1 {
+    margin: 0;
+    font-size: 25px;
+}
+header p {
+    margin-bottom: 0;
+}
+.container {
+    padding: 18px;
+    max-width: 600px;
+    margin: auto;
+}
+.card {
+    background: #222;
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+}
+h2 {
+    color: #e5bd55;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 13px;
+    margin: 7px 0;
+    border: 1px solid #555;
+    border-radius: 7px;
+    background: #333;
+    color: white;
+    font-size: 15px;
+}
+button {
+    background: #c49a26;
+    color: black;
+    border: none;
+    padding: 13px;
+    border-radius: 7px;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 16px;
+}
+.booking {
+    background: #333;
+    padding: 13px;
+    margin: 10px 0;
+    border-radius: 8px;
+}
+.delete {
+    background: #b83232;
+    color: white;
+}
+.total {
+    color: #e5bd55;
+    font-size: 22px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>ROYAL SALON</h1>
+<p>SHOP BOOK MANAGEMENT</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h2>📊 අද දවසේ විස්තර</h2>
+<p>මුළු Bookings: <span id="count">0</span></p>
+<p>මුළු ආදායම:</p>
+<div class="total">Rs. <span id="income">0</span></div>
+</div>
+
+<div class="card">
+<h2>➕ අලුත් Booking එකක්</h2>
+
+<input id="name" placeholder="පාරිභෝගික නම">
+
+<input id="phone" type="tel" placeholder="දුරකථන අංකය">
+
+<select id="service">
+<option value="">සේවාව තෝරන්න</option>
+<option>Hair Cut</option>
+<option>Beard Cut</option>
+<option>Hair Wash</option>
+<option>Hair Colour</option>
+<option>Facial</option>
+<option>Hair Style</option>
+<option>Other</option>
+</select>
+
+<input id="date" type="date">
+
+<input id="time" type="time">
+
+<input id="price" type="number" placeholder="මිල (Rs.)">
+
+<textarea id="note" placeholder="අමතර විස්තර"></textarea>
+
+<button onclick="addBooking()">SAVE BOOKING</button>
+</div>
+
+<div class="card">
+<h2>📖 Booking ලැයිස්තුව</h2>
+<input id="search" placeholder="නම හෝ දුරකථන අංකය සොයන්න" oninput="showBookings()">
+<div id="bookings"></div>
+</div>
+
+</div>
+
+<script>
+
+let bookings = JSON.parse(localStorage.getItem("royalBookings")) || [];
+
+function saveData() {
+    localStorage.setItem("royalBookings", JSON.stringify(bookings));
+}
+
+function addBooking() {
+
+    let name = document.getElementById("name").value;
+    let phone = document.getElementById("phone").value;
+    let service = document.getElementById("service").value;
+    let date = document.getElementById("date").value;
+    let time = document.getElementById("time").value;
+    let price = Number(document.getElementById("price").value);
+    let note = document.getElementById("note").value;
+
+    if (!name || !phone || !service || !date || !time || !price) {
+        alert("කරුණාකර සියලු විස්තර ඇතුළත් කරන්න!");
+        return;
+    }
+
+    bookings.push({
+        name, phone, service, date, time, price, note
+    });
+
+    saveData();
+
+    document.querySelectorAll("input, textarea").forEach(el => el.value = "");
+    document.getElementById("service").value = "";
+
+    showBookings();
+    alert("Booking එක සාර්ථකව Save වුණා!");
+}
+
+function showBookings() {
+
+    let list = document.getElementById("bookings");
+    let search = document.getElementById("search").value.toLowerCase();
+
+    list.innerHTML = "";
+
+    let income = 0;
+
+    bookings.forEach((b, i) => {
+        income += Number(b.price);
+
+        if ((b.name + b.phone).toLowerCase().includes(search)) {
+            list.innerHTML += `
+            <div class="booking">
+            <b>${escapeHTML(b.name)}</b><br>
+            දුරකථන: ${escapeHTML(b.phone)}<br>
+            සේවාව: ${escapeHTML(b.service)}<br>
+            දිනය: ${escapeHTML(b.date)}<br>
+            වේලාව: ${escapeHTML(b.time)}<br>
+            මිල: Rs. ${b.price}<br>
+            විස්තර: ${escapeHTML(b.note || "-")}
+            <button class="delete" onclick="deleteBooking(${i})">DELETE</button>
+            </div>`;
+        }
+    });
+
+    document.getElementById("count").innerText = bookings.length;
+    document.getElementById("income").innerText = income.toLocaleString();
+}
+
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, c => ({
+        '&':'&amp;', '<':'&lt;', '>':'&gt;',
+        '"':'&quot;', "'":'&#39;'
+    })[c]);
+}
+
+function deleteBooking(i) {
+    if (confirm("මෙම Booking එක මකා දමන්නද?")) {
+        bookings.splice(i, 1);
+        saveData();
+        showBookings();
+    }
+}
+
+showBookings();
+
+</script>
+
+</body>
+  </html>
