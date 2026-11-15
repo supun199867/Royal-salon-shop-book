@@ -2,81 +2,125 @@
 <html lang="si">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Royal Salon Shop Book</title>
 
 <style>
-* {
-    box-sizing: border-box;
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#101010;
+color:white;
 }
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #111;
-    color: white;
+header{
+background:linear-gradient(135deg,#171717,#4a360c);
+padding:25px 15px;
+text-align:center;
+border-bottom:2px solid #d4af37;
 }
-header {
-    background: #b8860b;
-    color: white;
-    text-align: center;
-    padding: 25px 10px;
+header h1{
+color:#e7c45a;
+margin:0;
+font-size:25px;
 }
-header h1 {
-    margin: 0;
-    font-size: 25px;
+header p{color:#ddd;margin-bottom:0}
+.container{
+max-width:650px;
+margin:auto;
+padding:15px;
 }
-header p {
-    margin-bottom: 0;
+.card{
+background:#202020;
+padding:17px;
+border-radius:13px;
+margin-bottom:16px;
+border:1px solid #51421c;
 }
-.container {
-    padding: 18px;
-    max-width: 600px;
-    margin: auto;
+h2{
+color:#e5c15b;
+font-size:19px;
 }
-.card {
-    background: #222;
-    padding: 18px;
-    border-radius: 12px;
-    margin-bottom: 18px;
+.stats{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
 }
-h2 {
-    color: #e5bd55;
+.stat{
+background:#292929;
+padding:15px 8px;
+border-radius:10px;
+text-align:center;
 }
-input, select, textarea {
-    width: 100%;
-    padding: 13px;
-    margin: 7px 0;
-    border: 1px solid #555;
-    border-radius: 7px;
-    background: #333;
-    color: white;
-    font-size: 15px;
+.stat small{color:#ccc}
+.stat strong{
+display:block;
+color:#e5c15b;
+font-size:18px;
+margin-top:8px;
 }
-button {
-    background: #c49a26;
-    color: black;
-    border: none;
-    padding: 13px;
-    border-radius: 7px;
-    font-weight: bold;
-    width: 100%;
-    margin-top: 10px;
-    font-size: 16px;
+input,select,textarea{
+width:100%;
+padding:13px;
+margin:7px 0;
+border-radius:7px;
+border:1px solid #555;
+background:#303030;
+color:white;
+font-size:15px;
 }
-.booking {
-    background: #333;
-    padding: 13px;
-    margin: 10px 0;
-    border-radius: 8px;
+button{
+border:0;
+padding:13px;
+border-radius:7px;
+font-weight:bold;
+cursor:pointer;
 }
-.delete {
-    background: #b83232;
-    color: white;
+.gold{
+background:#d4af37;
+color:black;
+width:100%;
+margin-top:10px;
 }
-.total {
-    color: #e5bd55;
-    font-size: 22px;
-    font-weight: bold;
+.tabs{
+display:flex;
+gap:8px;
+}
+.tabs button{
+flex:1;
+background:#333;
+color:white;
+}
+.tabs button.active{
+background:#d4af37;
+color:black;
+}
+.entry{
+background:#303030;
+padding:13px;
+border-radius:9px;
+margin:10px 0;
+border-left:4px solid #d4af37;
+}
+.income{color:#56dc91}
+.expense{color:#ff7777}
+.actions{
+display:flex;
+gap:8px;
+margin-top:10px;
+}
+.actions button{flex:1}
+.edit{background:#d4af37}
+.delete{background:#a83232;color:white}
+.profit{
+color:#6ce5a0;
+font-size:23px;
+font-weight:bold;
+}
+footer{
+text-align:center;
+padding:20px;
+color:#aaa;
 }
 </style>
 </head>
@@ -84,141 +128,359 @@ button {
 <body>
 
 <header>
-<h1>ROYAL SALON</h1>
-<p>SHOP BOOK MANAGEMENT</p>
+<h1>👑 ROYAL SALON</h1>
+<p>SHOP BOOK MANAGEMENT SYSTEM</p>
 </header>
 
 <div class="container">
 
 <div class="card">
-<h2>📊 අද දවසේ විස්තර</h2>
-<p>මුළු Bookings: <span id="count">0</span></p>
-<p>මුළු ආදායම:</p>
-<div class="total">Rs. <span id="income">0</span></div>
+<h2>📊 Dashboard</h2>
+
+<div class="stats">
+<div class="stat">
+<small>මුළු ආදායම</small>
+<strong id="totalIncome">Rs. 0</strong>
+</div>
+
+<div class="stat">
+<small>මුළු වියදම</small>
+<strong id="totalExpense">Rs. 0</strong>
+</div>
+
+<div class="stat">
+<small>ශුද්ධ ලාභය</small>
+<strong id="totalProfit">Rs. 0</strong>
+</div>
+
+<div class="stat">
+<small>ගනුදෙනු ගණන</small>
+<strong id="totalCount">0</strong>
+</div>
+</div>
 </div>
 
 <div class="card">
-<h2>➕ අලුත් Booking එකක්</h2>
+<h2>📅 අද දවසේ වාර්තාව</h2>
+<p>අද ආදායම: <b class="income" id="todayIncome">Rs. 0</b></p>
+<p>අද වියදම: <b class="expense" id="todayExpense">Rs. 0</b></p>
+<p>අද ලාභය: <b class="profit" id="todayProfit">Rs. 0</b></p>
+</div>
 
-<input id="name" placeholder="පාරිභෝගික නම">
+<div class="card">
+<h2>➕ අලුත් ගනුදෙනුවක්</h2>
 
-<input id="phone" type="tel" placeholder="දුරකථන අංකය">
+<div class="tabs">
+<button id="incomeTab" class="active"
+onclick="setType('income')">ආදායම +</button>
 
-<select id="service">
-<option value="">සේවාව තෝරන්න</option>
-<option>Hair Cut</option>
-<option>Beard Cut</option>
-<option>Hair Wash</option>
-<option>Hair Colour</option>
-<option>Facial</option>
-<option>Hair Style</option>
-<option>Other</option>
+<button id="expenseTab"
+onclick="setType('expense')">වියදම -</button>
+</div>
+
+<form id="transactionForm">
+
+<input id="amount" type="number"
+placeholder="මුදල (Rs.)" min="0.01" step="0.01" required>
+
+<select id="category" required></select>
+
+<input id="date" type="date" required>
+
+<textarea id="note"
+placeholder="විස්තර (අවශ්‍ය නම්)"></textarea>
+
+<button class="gold" type="submit">
+SAVE TRANSACTION
+</button>
+
+<button type="button" id="cancelEdit"
+onclick="cancelEdit()"
+style="display:none;width:100%;margin-top:8px;background:#555;color:white">
+CANCEL EDIT
+</button>
+
+</form>
+</div>
+
+<div class="card">
+<h2>📈 මාසික වාර්තාව</h2>
+
+<input type="month" id="monthFilter">
+
+<p>මාසික ආදායම:
+<b class="income" id="monthIncome">Rs. 0</b></p>
+
+<p>මාසික වියදම:
+<b class="expense" id="monthExpense">Rs. 0</b></p>
+
+<p>මාසික ලාභය:
+<b class="profit" id="monthProfit">Rs. 0</b></p>
+</div>
+
+<div class="card">
+<h2>📖 ගනුදෙනු ඉතිහාසය</h2>
+
+<input type="text" id="search"
+placeholder="ගනුදෙනුවක් සොයන්න..."
+oninput="showTransactions()">
+
+<select id="typeFilter" onchange="showTransactions()">
+<option value="all">සියලු ගනුදෙනු</option>
+<option value="income">ආදායම් පමණක්</option>
+<option value="expense">වියදම් පමණක්</option>
 </select>
 
-<input id="date" type="date">
-
-<input id="time" type="time">
-
-<input id="price" type="number" placeholder="මිල (Rs.)">
-
-<textarea id="note" placeholder="අමතර විස්තර"></textarea>
-
-<button onclick="addBooking()">SAVE BOOKING</button>
-</div>
-
-<div class="card">
-<h2>📖 Booking ලැයිස්තුව</h2>
-<input id="search" placeholder="නම හෝ දුරකථන අංකය සොයන්න" oninput="showBookings()">
-<div id="bookings"></div>
+<div id="transactionList"></div>
 </div>
 
 </div>
+
+<footer>
+ROYAL SALON SHOP BOOK 👑
+</footer>
 
 <script>
 
-let bookings = JSON.parse(localStorage.getItem("royalBookings")) || [];
+let transactions =
+JSON.parse(localStorage.getItem("royalFinanceData")) || [];
 
-function saveData() {
-    localStorage.setItem("royalBookings", JSON.stringify(bookings));
+let currentType = "income";
+let editId = null;
+
+const today = new Date().toLocaleDateString("en-CA");
+
+document.getElementById("date").value = today;
+document.getElementById("monthFilter").value = today.slice(0,7);
+
+const categories = {
+income:["Hair Cut","Beard Cut","Hair Wash",
+"Hair Colour","Facial","Hair Style","Other Income"],
+
+expense:["Products Purchase","Electricity Bill",
+"Shop Rent","Salary","Water Bill","Other Expense"]
+};
+
+function setType(type){
+currentType=type;
+
+document.getElementById("incomeTab")
+.classList.toggle("active",type==="income");
+
+document.getElementById("expenseTab")
+.classList.toggle("active",type==="expense");
+
+let select=document.getElementById("category");
+select.innerHTML="";
+
+categories[type].forEach(c=>{
+let option=document.createElement("option");
+option.value=c;
+option.textContent=c;
+select.appendChild(option);
+});
 }
 
-function addBooking() {
-
-    let name = document.getElementById("name").value;
-    let phone = document.getElementById("phone").value;
-    let service = document.getElementById("service").value;
-    let date = document.getElementById("date").value;
-    let time = document.getElementById("time").value;
-    let price = Number(document.getElementById("price").value);
-    let note = document.getElementById("note").value;
-
-    if (!name || !phone || !service || !date || !time || !price) {
-        alert("කරුණාකර සියලු විස්තර ඇතුළත් කරන්න!");
-        return;
-    }
-
-    bookings.push({
-        name, phone, service, date, time, price, note
-    });
-
-    saveData();
-
-    document.querySelectorAll("input, textarea").forEach(el => el.value = "");
-    document.getElementById("service").value = "";
-
-    showBookings();
-    alert("Booking එක සාර්ථකව Save වුණා!");
+function saveData(){
+localStorage.setItem(
+"royalFinanceData",
+JSON.stringify(transactions)
+);
 }
 
-function showBookings() {
-
-    let list = document.getElementById("bookings");
-    let search = document.getElementById("search").value.toLowerCase();
-
-    list.innerHTML = "";
-
-    let income = 0;
-
-    bookings.forEach((b, i) => {
-        income += Number(b.price);
-
-        if ((b.name + b.phone).toLowerCase().includes(search)) {
-            list.innerHTML += `
-            <div class="booking">
-            <b>${escapeHTML(b.name)}</b><br>
-            දුරකථන: ${escapeHTML(b.phone)}<br>
-            සේවාව: ${escapeHTML(b.service)}<br>
-            දිනය: ${escapeHTML(b.date)}<br>
-            වේලාව: ${escapeHTML(b.time)}<br>
-            මිල: Rs. ${b.price}<br>
-            විස්තර: ${escapeHTML(b.note || "-")}
-            <button class="delete" onclick="deleteBooking(${i})">DELETE</button>
-            </div>`;
-        }
-    });
-
-    document.getElementById("count").innerText = bookings.length;
-    document.getElementById("income").innerText = income.toLocaleString();
+function money(value){
+return "Rs. "+Number(value).toLocaleString("en-US");
 }
 
-function escapeHTML(value) {
-    return String(value).replace(/[&<>"']/g, c => ({
-        '&':'&amp;', '<':'&lt;', '>':'&gt;',
-        '"':'&quot;', "'":'&#39;'
-    })[c]);
+document.getElementById("transactionForm")
+.addEventListener("submit",function(e){
+
+e.preventDefault();
+
+let amount=Number(document.getElementById("amount").value);
+let category=document.getElementById("category").value;
+let date=document.getElementById("date").value;
+let note=document.getElementById("note").value;
+
+if(amount<=0 || !date || !category){
+alert("නිවැරදි විස්තර ඇතුළත් කරන්න.");
+return;
 }
 
-function deleteBooking(i) {
-    if (confirm("මෙම Booking එක මකා දමන්නද?")) {
-        bookings.splice(i, 1);
-        saveData();
-        showBookings();
-    }
+let transaction={
+id:editId || Date.now(),
+type:currentType,
+amount:amount,
+category:category,
+date:date,
+note:note
+};
+
+if(editId){
+let index=transactions.findIndex(t=>t.id===editId);
+transactions[index]=transaction;
+}else{
+transactions.push(transaction);
 }
 
-showBookings();
+saveData();
+cancelEdit();
+updateDashboard();
+
+alert("ගනුදෙනුව සාර්ථකව Save වුණා!");
+
+});
+
+function cancelEdit(){
+editId=null;
+document.getElementById("transactionForm").reset();
+document.getElementById("date").value=today;
+document.getElementById("cancelEdit").style.display="none";
+setType("income");
+}
+
+function calculate(list,type){
+return list
+.filter(t=>t.type===type)
+.reduce((sum,t)=>sum+Number(t.amount),0);
+}
+
+function updateDashboard(){
+
+let income=calculate(transactions,"income");
+let expense=calculate(transactions,"expense");
+
+document.getElementById("totalIncome").textContent=money(income);
+document.getElementById("totalExpense").textContent=money(expense);
+document.getElementById("totalProfit").textContent=money(income-expense);
+document.getElementById("totalCount").textContent=transactions.length;
+
+let todayList=transactions.filter(t=>t.date===today);
+
+let ti=calculate(todayList,"income");
+let te=calculate(todayList,"expense");
+
+document.getElementById("todayIncome").textContent=money(ti);
+document.getElementById("todayExpense").textContent=money(te);
+document.getElementById("todayProfit").textContent=money(ti-te);
+
+let month=document.getElementById("monthFilter").value;
+
+let monthList=transactions.filter(t=>t.date.startsWith(month));
+
+let mi=calculate(monthList,"income");
+let me=calculate(monthList,"expense");
+
+document.getElementById("monthIncome").textContent=money(mi);
+document.getElementById("monthExpense").textContent=money(me);
+document.getElementById("monthProfit").textContent=money(mi-me);
+
+showTransactions();
+}
+
+function safe(text){
+return String(text??"").replace(/[&<>"']/g,c=>({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#39;"
+})[c]);
+}
+
+function showTransactions(){
+
+let search=document.getElementById("search").value.toLowerCase();
+let filter=document.getElementById("typeFilter").value;
+
+let list=transactions.filter(t=>{
+return (
+(t.category+" "+t.note+" "+t.date)
+.toLowerCase().includes(search)
+&&
+(filter==="all" || t.type===filter)
+);
+});
+
+list.sort((a,b)=>b.date.localeCompare(a.date));
+
+let container=document.getElementById("transactionList");
+container.innerHTML="";
+
+if(list.length===0){
+container.textContent="ගනුදෙනු කිසිවක් නැත.";
+return;
+}
+
+list.forEach(t=>{
+
+let div=document.createElement("div");
+div.className="entry";
+
+let title=document.createElement("b");
+title.textContent=t.category;
+
+let details=document.createElement("p");
+details.textContent=t.date+" | "+(t.note || "-");
+
+let amount=document.createElement("b");
+amount.className=t.type;
+amount.textContent=(t.type==="income"?"+ ":"- ")+money(t.amount);
+
+let actions=document.createElement("div");
+actions.className="actions";
+
+let edit=document.createElement("button");
+edit.className="edit";
+edit.textContent="EDIT";
+edit.onclick=()=>editTransaction(t.id);
+
+let del=document.createElement("button");
+del.className="delete";
+del.textContent="DELETE";
+del.onclick=()=>deleteTransaction(t.id);
+
+div.append(title,details,amount,actions);
+actions.append(edit,del);
+container.appendChild(div);
+
+});
+}
+
+function editTransaction(id){
+
+let t=transactions.find(x=>x.id===id);
+if(!t)return;
+
+editId=id;
+setType(t.type);
+
+document.getElementById("amount").value=t.amount;
+document.getElementById("category").value=t.category;
+document.getElementById("date").value=t.date;
+document.getElementById("note").value=t.note;
+
+document.getElementById("cancelEdit").style.display="block";
+
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function deleteTransaction(id){
+
+if(confirm("මෙම ගනුදෙනුව මකා දමන්නද?")){
+transactions=transactions.filter(t=>t.id!==id);
+saveData();
+updateDashboard();
+}
+}
+
+document.getElementById("monthFilter")
+.addEventListener("change",updateDashboard);
+
+setType("income");
+updateDashboard();
 
 </script>
 
 </body>
-  </html>
+</html>
